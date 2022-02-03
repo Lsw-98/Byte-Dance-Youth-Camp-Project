@@ -1,11 +1,10 @@
-import Child from './Child'
 import React from 'react';
 import './App.css'
+import IndexRouter from './router/indexRouter'
 
 function App() {
   return <div>
-    app
-    <Child></Child>
+    <IndexRouter></IndexRouter>
   </div>
 
 }

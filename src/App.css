@@ -1,4 +1,1 @@
-div{
-  width: 100px;
-  background-color: yellow
-}
+@import '~antd/dist/antd.css';
