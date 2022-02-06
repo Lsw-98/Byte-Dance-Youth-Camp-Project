@@ -2,9 +2,21 @@ import React, { useState, useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
 import {
   UserOutlined,
-  VideoCameraOutlined,
-  UploadOutlined,
-  SettingOutlined,
+  ClockCircleOutlined,
+  CheckOutlined,
+  CloseOutlined,
+  DeleteOutlined,
+  LineChartOutlined,
+  GlobalOutlined,
+  EditOutlined,
+  UserSwitchOutlined,
+  TeamOutlined,
+  ThunderboltOutlined,
+  SolutionOutlined,
+  SafetyCertificateOutlined,
+  MonitorOutlined,
+  ProfileOutlined,
+  FileDoneOutlined,
 } from '@ant-design/icons';
 import { Layout, Menu } from 'antd';
 import './index.css'
@@ -16,6 +28,21 @@ const { SubMenu } = Menu;
 // 图标列表
 const iconList = {
   "/home": <UserOutlined></UserOutlined>,
+  "/right-manage": <ThunderboltOutlined />,
+  "/right-manage/right/list": <SafetyCertificateOutlined />,
+  "/right-manage/role/list": <SolutionOutlined />,
+  "/user-manage": <UserSwitchOutlined />,
+  "/user-manage/list": <TeamOutlined />,
+  "/news-manage": <GlobalOutlined></GlobalOutlined>,
+  "/news-manage/add": <EditOutlined />,
+  "/news-manage/draft": <DeleteOutlined></DeleteOutlined>,
+  "/audit-manage": <MonitorOutlined />,
+  "/audit-manage/audit": <FileDoneOutlined />,
+  "/audit-manage/list": <ProfileOutlined />,
+  "/publish-manage": <LineChartOutlined></LineChartOutlined>,
+  "/publish-manage/unpublished": <ClockCircleOutlined></ClockCircleOutlined>,
+  "/publish-manage/published": <CheckOutlined></CheckOutlined>,
+  "/publish-manage/sunset": <CloseOutlined></CloseOutlined>
 }
 
 function SideMenu(props) {

@@ -14,6 +14,8 @@ export default function TopHeader() {
   const changeCollapsed = () => {
     setCollapsed(!collapsed)
   }
+
+  // 下拉菜单
   const menu = (
     <Menu>
       <Menu.Item>
@@ -33,7 +35,7 @@ export default function TopHeader() {
         collapsed ? <MenuUnfoldOutlined onClick={changeCollapsed}></MenuUnfoldOutlined> : <MenuFoldOutlined onClick={changeCollapsed}></MenuFoldOutlined>
       }
       <div style={{ float: 'right' }}>
-        <span>欢迎回来!</span>
+        <span style={{ marginRight: "15px" }}>欢迎回来!</span>
         <Dropdown overlay={menu}>
           <Avatar size="large" icon={<UserOutlined />} />
         </Dropdown>
