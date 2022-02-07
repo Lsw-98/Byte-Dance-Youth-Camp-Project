@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Layout, Dropdown, Menu, Avatar } from 'antd';
-
+import { withRouter } from 'react-router-dom';
 import {
   MenuUnfoldOutlined,
   MenuFoldOutlined,
@@ -9,20 +9,25 @@ import {
 
 const { Header } = Layout;
 
-export default function TopHeader() {
+function TopHeader(props) {
   const [collapsed, setCollapsed] = useState(false)
   const changeCollapsed = () => {
     setCollapsed(!collapsed)
   }
 
+  const { role: { roleName }, username } = JSON.parse(localStorage.getItem("token"))
+
   // 下拉菜单
   const menu = (
     <Menu>
       <Menu.Item>
-        超级管理员
+        {roleName}
       </Menu.Item>
-      <Menu.Item danger>退出登录</Menu.Item>
-    </Menu>
+      <Menu.Item danger onClick={() => {
+        localStorage.removeItem("token")
+        props.history.replace("/login")
+      }}>退出登录</Menu.Item>
+    </Menu >
   );
 
   return (
@@ -35,12 +40,14 @@ export default function TopHeader() {
         collapsed ? <MenuUnfoldOutlined onClick={changeCollapsed}></MenuUnfoldOutlined> : <MenuFoldOutlined onClick={changeCollapsed}></MenuFoldOutlined>
       }
       <div style={{ float: 'right' }}>
-        <span style={{ marginRight: "15px" }}>欢迎回来!</span>
+        <span style={{ marginRight: "15px" }}>欢迎
+          <span style={{ color: "#DC143C" }}>{username}</span>回来!</span>
         <Dropdown overlay={menu}>
           <Avatar size="large" icon={<UserOutlined />} />
         </Dropdown>
       </div>
     </Header >
-
   );
 }
+
+export default withRouter(TopHeader)

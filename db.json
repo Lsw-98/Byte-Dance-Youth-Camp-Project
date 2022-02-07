@@ -263,6 +263,14 @@
       "id": 19,
       "title": "草稿箱",
       "rightId": 14,
+      "key": "/news-manage/category",
+      "pagepermisson": 1,
+      "grade": 2
+    },
+    {
+      "id": 20,
+      "title": "新闻分类",
+      "rightId": 14,
       "key": "/news-manage/draft",
       "pagepermisson": 1,
       "grade": 2
