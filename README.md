@@ -1,35 +1,42 @@
+# 项目来源
+
+https://github.com/LianglzNice/forum
+
 # 项目初始化
 
 ## 前端
 
 进入 /client 文件夹
 
-使用 yarn 安装相关依赖包（ps：可以用 npm 安装，但我安装时报错所以改用 yarn）
+使用 yarn 安装相关依赖包
 ```bash
 yarn install
 ```
 
-安装完后运行
+安装完后运行，待编译完成打开 http://localhost:3000/ 即可访问网页
 ```bash
 yarn start
 ```
 
-待编译完成打开 http://localhost:3000/ 即可访问网页
-
-关于访问服务端：服务端地址设置不是如教程所说在 ./setupProxy.js，而是在 /util/http.js 中（已修改至 http://localhost:8080）
+关于访问服务端：部分代码有问题，登录用不了，可直接跳转，路由在 clinet\src\components\app.js 查看
 
 ## 后端
 
-安装 json-server（yarn 安装的二进制文件无法执行<.<）
+进入 /server 文件夹
+
+使用 yarn 安装相关依赖包
 ```bash
-npm i -g json-server
+yarn install
 ```
 
-进入 /server 文件夹执行下列代码即可启动服务器，访问地址 http://localhost:8080/
+安装完后运行，后端访问地址 localhost:8080
 ```bash
-json-server --watch db.json --port 8080
+node app.js
 ```
 
 # 关于改进
 
-暂无
+1. 修复代码（修改一些弃置的语法，修改路由形式等），同时将样式修改为青训营
+2. 各板块新增“官方”tag筛选
+3. 右边栏新增基于获赞数的用户排名
+4. 实现视频页面
