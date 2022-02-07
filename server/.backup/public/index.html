@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<head>
+    <title>轻服务 starter</title>
+    <meta name="viewport" content="width=device-width"/>
+    <link rel="icon" href="images/favicon.png" sizes="32x32">
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Open+Sans:400,300,100,700,100italic,300italic,400italic">
+    <link rel="stylesheet"
+          href="https://unpkg.com/vue-json-viewer@2.2.8/style.css">
+    <link rel="stylesheet" type="text/css" href="css/styles.css">
+
+    <script src="https://unpkg.com/vue@2.6.10/dist/vue.min.js"></script>
+    <script src="https://unpkg.com/axios@0.19.0/dist/axios.min.js"></script>
+    <script src="https://unpkg.com/vue-json-viewer@2.2.8/vue-json-viewer.js"></script>
+</head>
+
+<body>
+<div id="app" style="display: flex;flex-direction: column">
+    <h1>待办事项 App</h1>
+    <div style="flex: 1 ;display: flex;height: 100%;overflow: hidden">
+        <div class="request-logger" style="flex: 1" ref="logger">
+            <h2 class="title">请求列表
+            </h2>
+            <div v-for="(lines,index) in requests" :key="index" class="request-card">
+                <div v-for="(line, index) in lines" :key="index" class="request-line">
+                    <div v-if="typeof line === 'object'">
+                        <json-viewer :value="line"
+                                     theme="json-theme"
+                                     expand-depth="1"></json-viewer>
+                    </div>
+                    <div v-else>
+                        {{line}}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="todo-wrapper" style="flex: 1">
+            <form @keydown.enter.prevent="" style="display: flex">
+
+                <input type="text" class="input-todo" :class="{ active: newTodo }" placeholder="输入待办事项"
+                       v-model="newTodo"
+                       @keyup.enter="addItem" style="flex:1 ;margin-right:10px;">
+                <div class="btn btn-add" :class="{ active: newTodo }" @click="addItem" style="flex:0">+</div>
+
+            </form>
+
+
+            <div hidden :hidden="loading">
+                <div v-if="pending.length > 0">
+                    <p class="status busy">您拥有 {{ pending.length }} 条待办事项</p>
+                    <transition-group name="todo-item" tag="ul" class="todo-list">
+                        <li v-for="(item, index) in pending" :key="'item_' + item._id">
+                            <input class="todo-checkbox" :id="'item_' + item._id" @change="updateToDone(item)"
+                                   type="checkbox">
+                            <label :for="'item_' + item._id"></label>
+                            <span class="todo-text">{{ item.title }}</span>
+                            <span class="delete" @click="deleteItem(item)"></span>
+                        </li>
+                    </transition-group>
+                </div>
+
+                <transition name="slide-fade">
+                    <p class="status free" v-if="!loading&&!pending.length"><img src="images/beer_celebration.svg"
+                                                                                 alt="celebration">恭喜您，已完成所有待办事项！
+                    </p>
+                </transition>
+
+                <div v-if="completed.length > 0 && showComplete">
+                    <p class="status">已完成待办事项：{{ completedPercentage }}</p>
+                    <transition-group name="todo-item" tag="ul" class="todo-list archived">
+                        <li v-for="(item, index) in completed" :key="'item_' + item._id">
+                            <input class="todo-checkbox" :id="'item_' + item._id" checked="checked"
+                                   @change="updateToUnDone(item)" type="checkbox">
+                            <label :for="'item_' + item._id"></label>
+                            <span class="todo-text">{{ item.title }}</span>
+                            <span class="delete" @click="deleteItem(item)"></span>
+                        </li>
+                    </transition-group>
+                </div>
+
+            </div>
+            <div class="control-buttons">
+                <div class="btn btn-secondary" v-if="completed.length > 0" @click="toggleShowComplete"><span
+                        v-if="!showComplete">显示</span><span v-else>隐藏</span>已完成
+                </div>
+                <div class="btn btn-secondary" v-if="todoList.length > 0" @click="clearAll">清除所有</div>
+            </div>
+        </div>
+
+        <div class="readme" style="flex: 1">
+            <h2 class="title">使用说明</h2>
+            <div>
+                轻服务云工程示例项目：
+                <li>操作中间区域管理你的待办事项。</li>
+                <li>左侧可以查看具体发生的请求。</li>
+                <li>项目包含前端界面，后端接口，数据库操作。</li>
+                <br/>
+                创建自己的云工程：<a href="https://qingfuwu.cn/docs/nodejs/cloud-project/quickstart.html" target="_blank">云工程入门</a>
+            </div>
+        </div>
+
+    </div>
+    <footer>
+        <a href="https://qingfuwu.cn/" target="_blank">立即试用轻服务</a>
+    </footer>
+</div>
+</body>
+<script>
+  Vue.use(JsonView.default);
+  new Vue({
+    el: '#app',
+    data() {
+      return {
+        todoList: [],
+        newTodo: '',
+        showComplete: true,
+        loading: true,
+        info: '',
+        requests: [],
+        request: []
+      };
+    },
+    /**
+     * 创建时做两件事：
+     * 1. 切入 axios，使得每个请求会显示到界面上
+     * 2. 向后端拉取待办事项数据
+     */
+    async created() {
+      this.interceptAxios();
+      await this.getTodos();
+      this.loading = false;
+    },
+    computed: {
+      /**
+       * 筛选所有未完成的待办事项
+       */
+      pending: function() {
+        return this.todoList.filter(function(item) {
+          return !item.done;
+        });
+      },
+      /**
+       * 筛选所有完成的待办事项
+       */
+      completed: function() {
+        return this.todoList.filter(function(item) {
+          return item.done;
+        });
+      },
+      /**
+       * 计算完成的百分比
+       */
+      completedPercentage: function() {
+        return (Math.floor((this.completed.length / this.todoList.length) * 100)) + '%';
+      }
+    },
+    methods: {
+      /**
+       * 切入 axios，记录请求和响应
+       */
+      interceptAxios() {
+        window.axios.interceptors.request.use((config) => {
+          const {method, url, data} = config;
+          this.request.push(`→ ${method.toUpperCase()} ${url}`);
+          if (data) {
+            this.request.push(data);
+          }
+          return config;
+        });
+        window.axios.interceptors.response.use((resp) => {
+          const {status, data} = resp;
+          this.request.push(`← ${status}`);
+          if (data) {
+            this.request.push(data);
+          }
+          this.requests.push(this.request);
+          this.setScroll();
+          this.request = [];
+          return resp;
+        }, async (err) => {
+          if (!err.response) {
+            throw err;
+          }
+          const {status, data} = err.response;
+          this.request.push(`← ${status}`);
+          if (data) {
+            this.request.push(data);
+          }
+          this.requests.push(this.request);
+          this.setScroll();
+
+          this.request = [];
+
+          throw err;
+        });
+      },
+      /**
+       * 当请求记录发生变化时，自动滚动内容
+       */
+      setScroll() {
+        if (this.scrollTimer) clearTimeout(this.scrollTimer);
+        this.scrollTimer = setTimeout(() => {
+          this.$refs.logger.scrollTo({
+            top: this.$refs.logger.scrollHeight + 1000,
+            behavior: 'smooth'
+          });
+        }, 300);
+      },
+      /**
+       * 界面是否显示已完成的待办事项
+       */
+      toggleShowComplete() {
+        this.showComplete = !this.showComplete;
+      },
+      /**
+       * 拉取所有待办事项
+       */
+      async getTodos() {
+        this.todoList = await this.fetchListAction();
+      },
+
+      /**
+       * 将一条待办事项设为完成
+       */
+      async updateToDone(item) {
+        item.done = true;
+        await this.updateToDoneAction(item._id);
+      },
+      /**
+       * 将一条待办事项设为未完成
+       */
+      async updateToUnDone(item) {
+        item.done = false;
+        await this.updateToUnDoneAction(item._id);
+      },
+      /**
+       * 增加一条待办事项
+       */
+      async addItem() {
+        // validation check
+        if (this.newTodo) {
+          const result = await this.addAction(this.newTodo);
+          this.todoList.push(result);
+        }
+        this.newTodo = '';
+      },
+      /**
+       * 删除一条待办事项
+       */
+      async deleteItem(item) {
+        const index = this.todoList.indexOf(item);
+        this.todoList.splice(index, 1);
+        await this.deleteAction(item._id);
+      },
+      /**
+       * 删除所有待办事项
+       */
+      async clearAll() {
+        await this.deleteAllAction();
+        this.todoList = [];
+      },
+
+      // 以下为 actions 的定义，完成实际的后端请求
+      async addAction(title) {
+        const {data: {result}} = await window.axios.post('/api/todo', {title});
+        return result;
+      },
+      async fetchListAction() {
+        const {data: {list}} = await window.axios.get('/api/todo');
+        return list;
+      },
+      async deleteAction(id) {
+        await window.axios.delete(`/api/todo/${id}`);
+      },
+      async deleteAllAction() {
+        await window.axios.delete(`/api/todo`);
+      },
+      async updateToDoneAction(_id) {
+        await window.axios.put(`/api/todo/${_id}/done`);
+      },
+      async updateToUnDoneAction(_id) {
+        await window.axios.put(`/api/todo/${_id}/undone`);
+      }
+    }
+
+  });
+</script>
