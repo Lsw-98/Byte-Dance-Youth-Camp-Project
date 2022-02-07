@@ -115,7 +115,6 @@ export default function RightList() {
       setDataSource([...dataSource])
       axios.delete(`http://localhost:5000/children/${item.id}`)
     }
-
   }
 
   return <div>
