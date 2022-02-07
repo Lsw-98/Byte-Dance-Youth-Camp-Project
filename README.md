@@ -4,7 +4,7 @@
 
 进入 /client 文件夹
 
-使用 yarn 安装相关依赖包（ps：可以用 npm 安装，但我安装时报错所以改用 yarn）
+使用 yarn 安装相关依赖包
 ```bash
 yarn install
 ```
@@ -20,7 +20,7 @@ yarn start
 
 ## 后端
 
-安装 json-server（yarn 安装的二进制文件无法执行<.<）
+安装 json-server
 ```bash
 npm i -g json-server
 ```
@@ -32,4 +32,4 @@ json-server --watch db.json --port 8080
 
 # 关于改进
 
-暂无
+暂无。修改页面样式？
