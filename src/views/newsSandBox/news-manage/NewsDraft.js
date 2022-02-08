@@ -1,6 +1,6 @@
 // 权限列表
 import React, { useState, useEffect } from 'react';
-import { Table, Button, Modal } from 'antd';
+import { Table, Button, Modal, notification } from 'antd';
 import axios from 'axios'
 import {
   DeleteOutlined,
@@ -11,7 +11,7 @@ import {
 
 const { confirm } = Modal;
 
-export default function NewsDraft() {
+export default function NewsDraft(props) {
   const [dataSource, setDataSource] = useState([])
   const { username } = JSON.parse(localStorage.getItem("token"))
 
@@ -33,9 +33,9 @@ export default function NewsDraft() {
     {
       title: '新闻标题',
       dataIndex: 'title',
-      // render: (key) => {
-      //   return <Tag color="orange">{key}</Tag>
-      // },
+      render: (title, item) => {
+        return <a href={`#/news-manage/preview/${item.id}`}>{title}</a>
+      },
     },
     {
       title: '作者',
@@ -62,12 +62,13 @@ export default function NewsDraft() {
             style={{ marginRight: "15px" }}
             shape="circle"
             icon={<EditOutlined></EditOutlined>}
-            onClick={() => confirmDel(item)}></Button>
+            onClick={() => updateNews(item)}></Button>
           <Button
             type='primary'
             shape="circle"
             icon={<ToTopOutlined />}
-            onClick={() => confirmDel(item)}></Button>
+            onClick={() => submitNews(item.id)}
+          ></Button>
 
         </div >
       },
@@ -94,23 +95,35 @@ export default function NewsDraft() {
 
   // 删除方法
   const deleteMethod = (item) => {
-    // 判断是否有子项
-    if (item.grade === 1) {
-      setDataSource(dataSource.filter(data => data.id !== item.id))
-      axios.delete(`/rights/${item.id}`)
-    } else {
-      // 有子项时删除子项，先从子项找到其父项，在对父项进行过滤
-      let list = dataSource.filter(data => data.id === item.rightId)
-      list[0].children = list[0].children.filter(data => data.id !== item.id)
-      // 
-      setDataSource([...dataSource])
-      axios.delete(`/children/${item.id}`)
-    }
+    setDataSource(dataSource.filter(data => data.id !== item.id))
+    axios.delete(`/news/${item.id}`)
+  }
+
+  const updateNews = (item) => {
+    props.history.push(`/news-manage/update/${item.id}`)
+  }
+
+  const submitNews = (id) => {
+    axios.patch(`/news/${id}`, {
+      auditState: 1
+    }).then(res => {
+      props.history.push("/audit-manage/list")
+      notification.info({
+        message: `通知`,
+        description:
+          "已提交至审核列表",
+        placement: "topRight",
+      });
+    })
   }
 
   return <div>
-    <Table dataSource={dataSource} columns={columns} pagination={{
-      pageSize: 5
-    }} />;
+    <Table
+      dataSource={dataSource}
+      columns={columns}
+      pagination={{
+        pageSize: 5
+      }}
+      rowKey={item => item.id} />;
   </div>;
 }

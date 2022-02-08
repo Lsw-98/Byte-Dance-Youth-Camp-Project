@@ -6,6 +6,8 @@ import RoleList from '../../views/newsSandBox/right-manage/RoleList';
 import UserList from '../../views/newsSandBox/user-manage/UserList';
 import NewsAdd from '../../views/newsSandBox/news-manage/NewsAdd';
 import NewsDraft from '../../views/newsSandBox/news-manage/NewsDraft';
+import NewsPreview from '../../views/newsSandBox/news-manage/NewsPreview';
+import NewsUpdate from '../../views/newsSandBox/news-manage/NewsUpdate';
 import NewsCategory from '../../views/newsSandBox/news-manage/NewsCategory';
 import Audit from '../../views/newsSandBox/audit-manage/Audit';
 import AuditList from '../../views/newsSandBox/audit-manage/AuditList';
@@ -23,6 +25,8 @@ const LocalRouterMap = {
   "/news-manage/add": NewsAdd,
   "/news-manage/draft": NewsDraft,
   "/news-manage/category": NewsCategory,
+  "/news-manage/preview/:id": NewsPreview,
+  "/news-manage/update/:id": NewsUpdate,
   "/audit-manage/audit": Audit,
   "/audit-manage/list": AuditList,
   "/publish-manage/unpublished": Unpublished,
@@ -44,7 +48,7 @@ export default function NewsRouter() {
   const { role: { rights } } = JSON.parse(localStorage.getItem("token"))
 
   const checkRoute = (item) => {
-    return LocalRouterMap[item.key] && item.pagepermisson
+    return LocalRouterMap[item.key] && (item.pagepermisson || item.routepermisson)
   }
 
   const checkUser = (item) => {

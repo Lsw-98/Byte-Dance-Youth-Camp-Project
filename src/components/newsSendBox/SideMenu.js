@@ -17,6 +17,7 @@ import {
   MonitorOutlined,
   ProfileOutlined,
   FileDoneOutlined,
+  CopyOutlined,
 } from '@ant-design/icons';
 import { Layout, Menu } from 'antd';
 import './index.css'
@@ -36,6 +37,7 @@ const iconList = {
   "/news-manage": <GlobalOutlined></GlobalOutlined>,
   "/news-manage/add": <EditOutlined />,
   "/news-manage/draft": <DeleteOutlined></DeleteOutlined>,
+  "/news-manage/category": <CopyOutlined />,
   "/audit-manage": <MonitorOutlined />,
   "/audit-manage/audit": <FileDoneOutlined />,
   "/audit-manage/list": <ProfileOutlined />,
