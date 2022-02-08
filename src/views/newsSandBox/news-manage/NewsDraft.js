@@ -124,6 +124,6 @@ export default function NewsDraft(props) {
       pagination={{
         pageSize: 5
       }}
-      rowKey={item => item.id} />;
+      rowKey={item => item.id} />
   </div>;
 }
