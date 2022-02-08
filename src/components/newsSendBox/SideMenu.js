@@ -22,6 +22,7 @@ import {
 import { Layout, Menu } from 'antd';
 import './index.css'
 import axios from 'axios'
+import { connect } from 'react-redux'
 
 const { Sider } = Layout;
 const { SubMenu } = Menu;
@@ -85,7 +86,7 @@ function SideMenu(props) {
   // 用户刷新后高亮显示
   const openKeys = ['/' + props.location.pathname.split('/')[1]]
   return (
-    <Sider trigger={null} collapsible>
+    <Sider trigger={null} collapsible collapsed={props.isCollapsed}>
       <div style={{ display: "flex", height: "100%", "flexDirection": "column" }}>
         <div className="logo">全球新闻管理系统</div>
         <div style={{ flex: 1, "overflow": "auto" }}>
@@ -102,4 +103,10 @@ function SideMenu(props) {
   );
 }
 
-export default withRouter(SideMenu)
+const mapStateToProps = ({ CollapsedReducer: { isCollapsed } }) => {
+  return {
+    isCollapsed
+  }
+}
+
+export default connect(mapStateToProps)(withRouter(SideMenu))
