@@ -76,7 +76,7 @@ export default function RoleList() {
   // 删除方法
   const deleteMethod = (item) => {
     setDataSource(dataSource.filter(data => data.id !== item.id))
-    axios.delete(`http://localhost:5000/roles/${item.id}`)
+    axios.delete(`/roles/${item.id}`)
   };
 
   // 权限分配点击OK
@@ -94,7 +94,7 @@ export default function RoleList() {
       return item
     }))
     // put到后端
-    axios.patch(`http://localhost:5000/roles/${currentId}`, {
+    axios.patch(`/roles/${currentId}`, {
       rightList: currentRightList
     })
   };
@@ -105,10 +105,10 @@ export default function RoleList() {
   };
 
   useEffect(() => {
-    axios.get("http://localhost:5000/roles").then(res => {
+    axios.get("/roles").then(res => {
       setDataSource(res.data)
     })
-    axios.get("http://localhost:5000/rights?_embed=children").then(res => {
+    axios.get("/rights?_embed=children").then(res => {
       setRightList(res.data)
     })
   }, [])

@@ -49,7 +49,7 @@ function SideMenu(props) {
   const [menu, setMenu] = useState([])
   useEffect(() => {
     // _embed关联子实体查询得到菜单栏的项与子项
-    axios.get("http://localhost:5000/rights?_embed=children").then(res => {
+    axios.get("/rights?_embed=children").then(res => {
       setMenu(res.data)
     })
   }, [])

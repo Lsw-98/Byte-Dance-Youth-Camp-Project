@@ -13,7 +13,7 @@ const { confirm } = Modal;
 export default function RightList() {
   const [dataSource, setDataSource] = useState([])
   useEffect(() => {
-    axios.get("http://localhost:5000/rights?_embed=children").then(res => {
+    axios.get("/rights?_embed=children").then(res => {
       const list = res.data
       // 首页没有子项，给首页的children项赋值为空字符，让其不显示树形结构
       list.forEach(item => {
@@ -73,11 +73,11 @@ export default function RightList() {
     item.pagepermisson = item.pagepermisson === 1 ? 0 : 1
     setDataSource([...dataSource])
     if (item.grade === 1) {
-      axios.patch(`http://localhost:5000/rights/${item.id}`, {
+      axios.patch(`/rights/${item.id}`, {
         pagepermisson: item.pagepermisson
       })
     } else {
-      axios.patch(`http://localhost:5000/children/${item.id}`, {
+      axios.patch(`/children/${item.id}`, {
         pagepermisson: item.pagepermisson
       })
     }
@@ -106,14 +106,14 @@ export default function RightList() {
     // 判断是否有子项
     if (item.grade === 1) {
       setDataSource(dataSource.filter(data => data.id !== item.id))
-      axios.delete(`http://localhost:5000/rights/${item.id}`)
+      axios.delete(`/rights/${item.id}`)
     } else {
       // 有子项时删除子项，先从子项找到其父项，在对父项进行过滤
       let list = dataSource.filter(data => data.id === item.rightId)
       list[0].children = list[0].children.filter(data => data.id !== item.id)
       // 
       setDataSource([...dataSource])
-      axios.delete(`http://localhost:5000/children/${item.id}`)
+      axios.delete(`/children/${item.id}`)
     }
   }
 

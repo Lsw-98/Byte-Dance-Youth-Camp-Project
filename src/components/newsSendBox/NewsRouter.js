@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Home from '../../views/newsSandBox/home/Home';
 import Nopermission from '../../views/newsSandBox/noperomission/Nopermission';
 import RightList from '../../views/newsSandBox/right-manage/RightList';
@@ -13,6 +13,7 @@ import Unpublished from '../../views/newsSandBox/publish-manage/Unpublished';
 import Published from '../../views/newsSandBox/publish-manage/Published';
 import Sunset from '../../views/newsSandBox/publish-manage/Sunset';
 import { Switch, Route, Redirect } from 'react-router-dom';
+import axios from 'axios';
 
 const LocalRouterMap = {
   "/home": Home,
@@ -30,15 +31,45 @@ const LocalRouterMap = {
 }
 
 export default function NewsRouter() {
+  const [BackRouteList, setBackRouteList] = useState([])
+  useEffect(() => {
+    Promise.all([
+      axios.get("/rights"),
+      axios.get("/children"),
+    ]).then(res => {
+      setBackRouteList([...res[0].data, ...res[1].data])
+    }, [])
+  })
+
+  const { role: { rights } } = JSON.parse(localStorage.getItem("token"))
+
+  const checkRoute = (item) => {
+    return LocalRouterMap[item.key] && item.pagepermisson
+  }
+
+  const checkUser = (item) => {
+    return rights.includes(item.key)
+  }
+
   return (
     <Switch>
-      <Route path="/home" component={Home}></Route>
-      <Route path="/user-manage/list" component={UserList}></Route>
-      <Route path="/right-manage/role/list" component={RoleList}></Route>
-      <Route path="/right-manage/right/list" component={RightList}></Route>
+      {
+        BackRouteList.map(item => {
+          if (checkRoute(item) && checkUser(item)) {
+            return <Route
+              path={item.key}
+              key={item.key}
+              component={LocalRouterMap[item.key]}
+              exact />
+          }
+          return null
+        })
+      }
 
       <Redirect from="/" to="/home" exact></Redirect>
-      <Route path="*" component={Nopermission}></Route>
+      {
+        BackRouteList.length > 0 && <Route path="*" component={Nopermission}></Route>
+      }
     </Switch>
   );
 }

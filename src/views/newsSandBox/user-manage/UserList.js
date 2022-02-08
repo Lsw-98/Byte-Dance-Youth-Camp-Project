@@ -96,20 +96,20 @@ export default function UserList() {
       "3": "editor"
     }
 
-    axios.get("http://localhost:5000/users?_expand=role").then(res => {
+    axios.get("/users?_expand=role").then(res => {
       const list = res.data
       setDataSource(roleObj[roleId] === "superadmin" ? list : [
         ...list.filter(item => item.username === username),
         ...list.filter(item => item.region === region && roleObj[item.roleId] === "editor")
       ])
     }, [roleId, region, username])
-    axios.get("http://localhost:5000/regions").then(res => {
+    axios.get("/regions").then(res => {
       setRegionData(res.data)
     })
-    axios.get("http://localhost:5000/roles").then(res => {
+    axios.get("/roles").then(res => {
       setRoleData(res.data)
     })
-  }, [])
+  }, [roleId, region, username])
 
   const updateMessage = (item) => {
     setTimeout(() => {
@@ -139,7 +139,7 @@ export default function UserList() {
         return item
       }))
       setIsUpdateDisabled(!isUpdateDisabled)
-      axios.patch(`http://localhost:5000/users/${current.id}`,
+      axios.patch(`/users/${current.id}`,
         value)
     })
   }
@@ -167,7 +167,7 @@ export default function UserList() {
     setDataSource(dataSource.filter(data =>
       data.id !== item.id
     ))
-    axios.delete(`http://localhost:5000/users/${item.id}`)
+    axios.delete(`/users/${item.id}`)
   }
 
   const showForm = () => {
@@ -181,7 +181,7 @@ export default function UserList() {
       addForm.current.resetFields()
       // 首先post到后端，在设置datasource
       // 方便删除和更新操作
-      axios.post(`http://localhost:5000/users`, {
+      axios.post(`/users`, {
         ...value,
         "roleState": true,
         "default": false,
@@ -199,7 +199,7 @@ export default function UserList() {
   const stateChange = (item) => {
     item.roleState = !item.roleState
     setDataSource([...dataSource])
-    axios.patch(`http://localhost:5000/users/${item.id}`, {
+    axios.patch(`/users/${item.id}`, {
       roleState: item.roleState
     })
   }
