@@ -1,0 +1,69 @@
++ users
+  + get
+    + /
+      + queryString:
+        + username
+        + password
+        + roleState
+        + _expand=role
+  + post
+    + /
+  + patch
+    + /:id
+  + delect
+    + /:id
++ roles
+  + get
+    + /
+  + patch
+    + /:id
+  + delect
+    + /:id
++ children
+  + get
+    + /
+  + patch
+    + /:id
+  + delect
+    + /:id
++ rights
+  + get
+    + /
+      + queryString:
+        + _embed = children
+  + patch
+    + /:id
+  + delect
+    + /:id
++ categories
+  + get
+    + /
+  + patch
+    + /:id
+  + delect
+    + /:id
++ regions
+  + get
+    + /
++ news
+  + get
+    + /:id
+      + queryString:
+        <!-- 如果同参数名设置了两个值，即 _expand=category&_expand=role，则获取时为数组 -->
+        + _expand=category
+        + _expand=role
+    + /
+      + queryString
+        + publishState
+        + author=${username}
+        + auditState=1
+        + _expand=category
+        + _sort=view
+        + _order=desc
+        + _limit=6
+  + post
+    + /
+  + patch
+    + /:id
+  + delect
+    + /:id
