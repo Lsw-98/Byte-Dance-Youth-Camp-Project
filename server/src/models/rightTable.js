@@ -1,6 +1,7 @@
 // 使用 larkcloud 调用轻服务功能
 const inspirecloud = require('@byteinspire/inspirecloud-api');
 const { childTable } = require('./childTable');
+const ObjectId = inspirecloud.db.ObjectId;
 
 // 使用轻服务 rights 表
 // 若用户未创建，在发送第一条调用时会自动创建该表
@@ -16,7 +17,7 @@ class Right {
   constructor(params) {
     const { _id, title, key, pagepermisson, grade } = params;
 
-    _id===undefined?this._id=null:this._id=_id;
+    _id===undefined?this._id=null:this._id=ObjectId(_id);
     title===undefined?this.title=null:this.title=title;
     key===undefined?this.key=null:this.key=key;
     pagepermisson===undefined?this.pagepermisson=null:this.pagepermisson=pagepermisson;

@@ -24,7 +24,7 @@ class RoleService {
    * 若不存在，则抛出 404 错误
    */
   async delete(id) {
-    const role = await roleroleTable.where({_id: ObjectId(id)});
+    const role = await roleroleTable.where({_id: ObjectId(id)}).findOne();
     const users = await userTable.where({ roleId: role._id }).find();
 
     const result = await roleTable.delete(role);

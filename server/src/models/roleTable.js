@@ -1,5 +1,6 @@
 // 使用 larkcloud 调用轻服务功能
 const inspirecloud = require('@byteinspire/inspirecloud-api');
+const ObjectId = inspirecloud.db.ObjectId;
 
 // 使用轻服务 roles 表
 // 若用户未创建，在发送第一条调用时会自动创建该表
@@ -14,7 +15,7 @@ class Role {
   constructor(params) {
     const { _id, roleName, roleType, rights } = params;
 
-    _id===undefined?this._id=null:this._id=_id;
+    _id===undefined?this._id=null:this._id=ObjectId(_id);
     roleName===undefined?this.roleName=null:this.roleName=roleName;
     roleType===undefined?this.roleType=null:this.roleType=roleType;
     rights===undefined?this.rights=null:this.rights=rights;

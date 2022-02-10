@@ -15,8 +15,13 @@ function str2bool(s) {
   else return false;
 }
 
+function str2number(s) {
+  return Number(s);
+}
+
 module.exports = {
   _id2id,
   getClassSettedKey,
-  str2bool
+  str2bool,
+  str2number
 };

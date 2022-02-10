@@ -2,8 +2,9 @@
 const inspirecloud = require('@byteinspire/inspirecloud-api');
 const { roleTable } = require('./roleTable');
 const { str2bool } = require('../utils/transform');
+const ObjectId = inspirecloud.db.ObjectId;
 
-// 使用轻服务 todo 表
+// 使用轻服务 users 表
 // 若用户未创建，在发送第一条调用时会自动创建该表
 const userTable = inspirecloud.db.table('users');
 
@@ -19,7 +20,7 @@ class User {
   constructor(params) {
     const { _id, username, password, roleState, region, roleId } = params;
     const dft = params.default;
-    _id===undefined?this._id=null:this._id=_id;
+    _id===undefined?this._id=null:this._id=ObjectId(_id);
     username===undefined?this.username=null:this.username=username;
     password===undefined?this.password=null:this.password=password;
     if (roleState===undefined) this.roleState=null;
@@ -33,7 +34,7 @@ class User {
       else this.default=dft;
     }
     region===undefined?this.region=null:this.region=region;
-    roleId===undefined?this.roleId=null:this.roleId=roleId;
+    roleId===undefined?this.roleId=null:this.roleId=ObjectId(roleId);
   }
 }
 
