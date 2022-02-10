@@ -18,7 +18,6 @@ class RightController {
    * @param res Express 的响应参数
    */
   async listAll(req, res) {
-    console.log('asd')
     // 调用 Service 层对应的业务处理方法
     let list = [];
     if ('_embed' in req.query && req.query._embed === 'children') {

@@ -1,4 +1,5 @@
 const { rightTable } = require('../models/rightTable');
+const { childTable } = require('../models/childTable');
 const inspirecloud = require('@byteinspire/inspirecloud-api');
 const ObjectId = inspirecloud.db.ObjectId;
 
@@ -32,12 +33,17 @@ class RightService {
    * 若不存在，则抛出 404 错误
    */
   async delete(id) {
-    const result = await rightTable.where({_id: ObjectId(id)}).delete();
+    const right = await rightTable.where({_id: ObjectId(id)}).populate('children').findOne();
+    const children = right.children;
+
+    const result = await rightTable.delete(right);
     if (result.deletedCount===0) {
       const error = new Error(`right:${id} not found`);
       error.status = 404;
       throw error;
     }
+    // 级联删除
+    await childTable.delete(children);
   }
 
   /**

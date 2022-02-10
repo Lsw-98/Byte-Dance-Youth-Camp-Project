@@ -1,4 +1,5 @@
 const { roleTable } = require('../models/roleTable');
+const { userTable} = require('../models/userTable');
 const inspirecloud = require('@byteinspire/inspirecloud-api');
 const ObjectId = inspirecloud.db.ObjectId;
 
@@ -23,12 +24,17 @@ class RoleService {
    * 若不存在，则抛出 404 错误
    */
   async delete(id) {
-    const result = await roleTable.where({_id: ObjectId(id)}).delete();
+    const role = await roleroleTable.where({_id: ObjectId(id)});
+    const users = await userTable.where({ roleId: role._id }).find();
+
+    const result = await roleTable.delete(role);
     if (result.deletedCount===0) {
       const error = new Error(`role:${id} not found`);
       error.status = 404;
       throw error;
     }
+
+    await userTable.delete(users);
   }
 
   /**
