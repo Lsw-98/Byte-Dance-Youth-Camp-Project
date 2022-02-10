@@ -10,9 +10,9 @@ const UserForm = forwardRef((props,ref) => {
 
     const {roleId,region}  = JSON.parse(localStorage.getItem("token"))
     const roleObj = {
-        "1":"superadmin",
-        "2":"admin",
-        "3":"editor"
+        "6204b0c10dcb9809bcdb3e91":"superadmin",
+        "6204b0c10dcb9809bcdb3e92":"admin",
+        "6204b0c10dcb9809bcdb3e93":"editor"
     }
     const checkRegionDisabled = (item)=>{
         if(props.isUpdate){

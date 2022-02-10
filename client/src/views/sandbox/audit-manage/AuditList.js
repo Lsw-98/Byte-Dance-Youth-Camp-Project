@@ -6,7 +6,7 @@ export default function AuditList(props) {
     const {username} = JSON.parse(localStorage.getItem("token"))
     useEffect(()=>{
         axios(`/news?author=${username}&auditState_ne=0&publishState_lte=1&_expand=category`).then(res=>{
-            console.log(res.data)
+            // console.log(res.data)
             setdataSource(res.data)
         })
     },[username])

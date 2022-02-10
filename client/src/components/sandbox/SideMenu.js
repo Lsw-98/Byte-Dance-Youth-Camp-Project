@@ -62,7 +62,7 @@ function SideMenu(props) {
   const [meun, setMeun] = useState([])
   useEffect(()=>{
     axios.get("/rights?_embed=children").then(res=>{
-      console.log(res.data)
+      // console.log(res.data)
       setMeun(res.data)
     })
   },[])
@@ -93,7 +93,7 @@ function SideMenu(props) {
   return (
     <Sider trigger={null} collapsible collapsed={props.isCollapsed} >
       <div style={{display:"flex",height:"100%","flexDirection":"column"}}>
-        <div className="logo" >全球新闻发布管理系统</div>
+        <div className="logo" >News Hub</div>
         <div style={{flex:1,"overflow":"auto"}}>
           <Menu theme="dark" mode="inline" selectedKeys={selectKeys} className="aaaaaaa" defaultOpenKeys={openKeys}>
               {renderMenu(meun)}

@@ -1,4 +1,4 @@
-本项目实现了一个“全球新闻发布管理系统”。其中，前端基于 React + Redux + react-router-dom + Ant Design 搭建；后端基于轻服务 express 框架搭建。项目演示地址： 
+本项目实现了一个“News Hub” 新闻管理中心。其中，前端基于 React + Redux + react-router-dom + Ant Design 搭建；后端基于轻服务 express 框架搭建。项目演示地址： 
 https://qcigwi.app.cloudendpoint.cn
 
 # 项目初始化

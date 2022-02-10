@@ -7,10 +7,10 @@ import axios from 'axios'
 export default function Login(props) {
 
     const onFinish = (values) => {
-        console.log(values)
+        // console.log(values)
 
         axios.get(`/users?username=${values.username}&password=${values.password}&roleState=true&_expand=role`).then(res=>{
-            console.log(res.data)
+            // console.log(res.data)
             if(res.data.length===0){
                 message.error("用户名或密码不匹配")
             }else{
@@ -177,7 +177,7 @@ export default function Login(props) {
                   }
             }/>
             <div className="formContainer">
-                <div className="logintitle">全球新闻发布管理系统</div>
+                <div className="logintitle">News Hub</div>
                 <Form
                     name="normal_login"
                     className="login-form"
