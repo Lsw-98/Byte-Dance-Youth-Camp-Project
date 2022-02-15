@@ -85,7 +85,7 @@ const UserForm = forwardRef((props,ref) => {
             >
                 <Select onChange={(value)=>{
                     // console.log(value)
-                    if(value === 1){
+                    if(value === '6204b0c10dcb9809bcdb3e91'){
                         setisDisabled(true)
                         ref.current.setFieldsValue({
                             region:""

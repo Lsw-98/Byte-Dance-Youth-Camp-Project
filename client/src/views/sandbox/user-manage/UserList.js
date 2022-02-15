@@ -108,7 +108,7 @@ export default function UserList() {
     const handleUpdate = (item)=>{
         setTimeout(()=>{
             setisUpdateVisible(true)
-            if(item.roleId===1){
+            if(item.roleId==='6204b0c10dcb9809bcdb3e91'){
                 //禁用
                 setisUpdateDisabled(true)
             }else{
