@@ -80,10 +80,14 @@ function SideMenu(props) {
         </SubMenu>
       }
 
-      return checkPagePermission(item) && <Menu.Item key={item.key} icon={iconList[item.key]}  onClick={()=>{
-        //  console.log(props)
-        props.history.push(item.key)
-      }}>{item.title}</Menu.Item>
+      if (checkPagePermission(item)) {
+        return (
+          <Menu.Item key={item.key} icon={iconList[item.key]}  onClick={()=>{
+            //  console.log(props)
+            props.history.push(item.key)
+          }}>{item.title}</Menu.Item>
+        )
+      } else return undefined;
     })
   }
 

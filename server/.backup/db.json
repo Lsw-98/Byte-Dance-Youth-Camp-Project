@@ -323,7 +323,7 @@
       "id": 1,
       "title": "首页",
       "key": "/home",
-      "pagepermisson": 1,
+      "pagepermisson": 0,
       "grade": 1
     },
     {
