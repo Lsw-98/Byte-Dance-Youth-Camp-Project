@@ -11,6 +11,7 @@ export default function Login(props) {
       if (res.data.length === 0) {
         message.error("用户名或密码错误")
       } else {
+        console.log(res.data);
         localStorage.setItem("token", JSON.stringify(res.data[0]))
         props.history.push("/")
       }
@@ -19,7 +20,7 @@ export default function Login(props) {
 
   return (
     <div style={{ background: "rgb(35, 39, 65)", height: "100%", overflow: "hidden" }} >
-      <Particles height={document.documentElement.clientHeight}params={
+      <Particles height={document.documentElement.clientHeight} params={
         {
           "background": {
             "color": {
@@ -173,7 +174,7 @@ export default function Login(props) {
             }
           }
         }
-      }/>
+      } />
       <div className='formContainer'>
         <div className="title">全球新闻发布管理系统</div>
         <Form

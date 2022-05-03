@@ -188,7 +188,7 @@ export default function UserList() {
       }).then(res => {
         setDataSource([...dataSource, {
           ...res.data,
-          role: roleData.filter(item => item.id == value.roleId)[0]
+          role: roleData.filter(item => item.id === value.roleId)[0]
         }])
       })
     }).catch(err => {

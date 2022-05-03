@@ -22,10 +22,10 @@ function TopHeader(props) {
   // 下拉菜单
   const menu = (
     <Menu>
-      <Menu.Item>
+      <Menu.Item key={1}>
         {roleName}
       </Menu.Item>
-      <Menu.Item danger onClick={() => {
+      <Menu.Item key={2} danger onClick={() => {
         localStorage.removeItem("token")
         props.history.replace("/login")
       }}>退出登录</Menu.Item>
