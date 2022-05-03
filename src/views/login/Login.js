@@ -11,7 +11,6 @@ export default function Login(props) {
       if (res.data.length === 0) {
         message.error("用户名或密码错误")
       } else {
-        console.log(res.data);
         localStorage.setItem("token", JSON.stringify(res.data[0]))
         props.history.push("/")
       }

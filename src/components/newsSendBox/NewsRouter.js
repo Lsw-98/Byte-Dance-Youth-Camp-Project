@@ -43,9 +43,10 @@ export default function NewsRouter(props) {
       axios.get("/rights"),
       axios.get("/children"),
     ]).then(res => {
+      console.log(res);
       setBackRouteList([...res[0].data, ...res[1].data])
-    }, [])
-  })
+    })
+  }, [])
 
   const { role: { rights } } = JSON.parse(localStorage.getItem("token"))
 
@@ -58,7 +59,6 @@ export default function NewsRouter(props) {
   }
 
   return (
-    // <Spin size="large" spinning={props.isLoading}>
     <Spin size="large" spinning={false}>
       <Switch>
         {
