@@ -17,7 +17,7 @@ import Sunset from '../../views/newsSandBox/publish-manage/Sunset';
 import { Switch, Route, Redirect } from 'react-router-dom';
 import axios from 'axios';
 import { Spin } from 'antd';
-// import { connect } from 'react-redux';
+import { connect } from 'react-redux';
 
 const LocalRouterMap = {
   "/home": Home,
@@ -36,14 +36,13 @@ const LocalRouterMap = {
   "/publish-manage/sunset": Sunset
 }
 
-export default function NewsRouter(props) {
+function NewsRouter(props) {
   const [BackRouteList, setBackRouteList] = useState([])
   useEffect(() => {
     Promise.all([
       axios.get("/rights"),
       axios.get("/children"),
     ]).then(res => {
-      console.log(res);
       setBackRouteList([...res[0].data, ...res[1].data])
     })
   }, [])
@@ -83,8 +82,8 @@ export default function NewsRouter(props) {
   );
 }
 
-// const mapStateToProps = ({ LoadingReducer: { isLoading } }) => ({
-//   isLoading
-// })
+const mapStateToProps = ({ LoadingReducer: { isLoading } }) => ({
+  isLoading
+})
 
-// export default connect(mapStateToProps)(NewsRouter)
+export default connect(mapStateToProps)(NewsRouter)

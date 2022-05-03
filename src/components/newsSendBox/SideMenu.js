@@ -86,9 +86,9 @@ function SideMenu(props) {
   // 用户刷新后高亮显示
   const openKeys = ['/' + props.location.pathname.split('/')[1]]
   return (
-    <Sider trigger={null} collapsible collapsed={props.isCollapsed}>
+    <Sider trigger={null} isCollapsed collapsed={props.isCollapsed}>
       <div style={{ display: "flex", height: "100%", "flexDirection": "column" }}>
-        <div className="logo">全球新闻管理系统</div>
+        <div className="logo">News hub</div>
         <div style={{ flex: 1, "overflow": "auto" }}>
           {/* 
           selectedKeys：受控组件
