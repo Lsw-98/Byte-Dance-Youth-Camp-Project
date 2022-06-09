@@ -34,7 +34,6 @@ export default function NewsAdd(props) {
       else {
         setCurrent(current + 1)
       }
-
     }
   }
 
@@ -75,6 +74,20 @@ export default function NewsAdd(props) {
       setCategoryList(res.data)
     })
   }, [])
+
+  const choosefile = () => {
+    var fileList = document.getElementById('files').files;
+    var nameStr = '';
+    for (let i = 0; i < fileList.length; i++) {
+      nameStr += `${i === 0 ? '' : ', '}${fileList[i].name}`;
+      var reader = new FileReader();
+      reader.readAsText(fileList[i], "UTF-8");
+      reader.onload = function (e) {
+        var upContent = e.target.result;
+        setContent(upContent)
+      }
+    }
+  }
 
   return (
     <div>
@@ -122,9 +135,7 @@ export default function NewsAdd(props) {
         </div>
 
         <div className={current === 1 ? '' : style.active}>
-          <NewsEditor getContent={(value) => {
-            setContent(value)
-          }}></NewsEditor>
+          <NewsEditor getContent={(value) => { setContent(value) }}></NewsEditor>
         </div>
 
         <div className={current === 2 ? '' : style.active}></div>
@@ -135,9 +146,11 @@ export default function NewsAdd(props) {
         {
           current > 0 && <Button style={{ marginRight: "15px" }} onClick={forward}>上一步</Button>
         }
-
         {
           current < 2 && <Button style={{ marginRight: "15px" }} onClick={next}>下一步</Button>
+        }
+        {
+          current === 1 && <input type="file" name="file" multiple="multiple" id="files" onChange={choosefile} />
         }
 
         {
@@ -153,6 +166,6 @@ export default function NewsAdd(props) {
         }
 
       </div>
-    </div>
+    </div >
   );
 }

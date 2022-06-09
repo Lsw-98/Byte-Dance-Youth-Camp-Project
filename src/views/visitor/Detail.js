@@ -2,9 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { PageHeader, Descriptions } from 'antd';
 import axios from 'axios'
 import moment from 'moment'
-import {
-  HeartTwoTone
-} from '@ant-design/icons';
+import { HeartTwoTone } from '@ant-design/icons';
 
 
 export default function Detail(props) {
@@ -24,7 +22,21 @@ export default function Detail(props) {
     })
   }, [props.match.params.id])
 
+
+
+  const handleStar = () => {
+    setNewsInfo({
+      ...newsInfo,
+      star: newsInfo.star + 1
+    })
+
+    axios.patch(`/news/${props.match.params.id}`, {
+      star: newsInfo.star + 1
+    })
+  }
+
   const handleCopy = (event) => {
+    console.log(1);
     // clipboardData 对象是为通过编辑菜单、快捷菜单和快捷键执行的编辑操作所保留的，也就是你复制或者剪切内容
     let clipboardData = event.clipboardData || window.clipboardData;
     // 如果未复制或者未剪切，则return出去
@@ -41,20 +53,9 @@ export default function Detail(props) {
     }
   }
 
-  const handleStar = () => {
-    setNewsInfo({
-      ...newsInfo,
-      star: newsInfo.star + 1
-    })
-
-    axios.patch(`/news/${props.match.params.id}`, {
-      star: newsInfo.star + 1
-    })
-  }
-
-  return <div onCopy={(event) => { handleCopy(event) }}>
+  return <div>
     {
-      newsInfo && <div>
+      newsInfo && <div onCopy={event => handleCopy(event)}>
         <PageHeader
           onBack={() => window.history.back()}
           title={newsInfo.title}

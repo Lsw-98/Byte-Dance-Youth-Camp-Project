@@ -11,7 +11,7 @@ export default function NewsEditor(props) {
   useEffect(() => {
     // html转为文本
     const html = props.content;
-    if(html===undefined) return 
+    if (html === undefined) return
     const contentBlock = htmlToDraft(html);
     if (contentBlock) {
       const contentState = ContentState.createFromBlockArray(contentBlock.contentBlocks);
@@ -29,6 +29,7 @@ export default function NewsEditor(props) {
         editorClassName="editorClassName"
         onEditorStateChange={(editorState) => setEditorState(editorState)}
         onBlur={() => {
+          console.log(editorState.getCurrentContent());
           props.getContent(draftToHtml(convertToRaw(editorState.getCurrentContent())))
         }}
       />
