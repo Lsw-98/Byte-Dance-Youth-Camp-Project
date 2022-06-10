@@ -114,21 +114,22 @@ const handleCopy = (event) => {
 }
 ```
 
-## 添加了文件上传功能
-```js
-const choosefile = () => {
-  var fileList = document.getElementById('files').files;
-  var nameStr = '';
-  for (let i = 0; i < fileList.length; i++) {
-    nameStr += `${i === 0 ? '' : ', '}${fileList[i].name}`;
-    var reader = new FileReader();
-    reader.readAsText(fileList[i], "UTF-8");
-    reader.onload = function (e) {
-      var upContent = e.target.result;
-      setContent(upContent)
-    }
-  }
-}
-```
+## 添加了大文件上传功能
 
+- 利用`File`从`Blob`继承的`slice`方法对文件进行切片
+- 通过`web worker`利用`FileReader`和`spark-md5`生成文件的hash值
+- `xhr`通过`formData`上传文件
+- node.js + http模块
+- fse处理文件
+- `multiparty`处理`formData`
+
+实现了如下功能：
+1. 大文件切片
+2. 暂停/恢复上传
+3. 断点续传，记忆已上传的部分
+4. 文件妙传
+
+![128820298-db9a37e3-9be5-41f6-b558-92d0dc115566](https://user-images.githubusercontent.com/70066311/172969456-2c46df1c-88af-4880-91f1-258ecc2abf39.gif)
+
+![128820450-4dbea09b-65e2-44af-ae5c-816d394675f7](https://user-images.githubusercontent.com/70066311/172973270-8cf4bdc9-b9ad-4e4b-abd3-51f6d15aa398.gif)
 
