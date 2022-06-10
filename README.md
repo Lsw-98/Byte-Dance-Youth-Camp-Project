@@ -93,6 +93,42 @@ useMemo根据数组中的prop和state的变化情况执行回调函数。
 **useEffect和useMemo的区别**
 useEffect会在DOM更新完后执行副作用函数；而useMemo会在页面渲染期间执行回调函数，useMemo可以在DOM改变时控制某些函数不被触发。
 
+## 添加了复制文章添加版权的功能
+添加了新功能，在文章详情中复制文章内容，得到的复制内容后添加文章版权信息。根据触发onCopy事件，判断当前是否有复制或剪切的内容，如果有则将文本转化为字符串，然后进行字符串拼接。
+```js
+const handleCopy = (event) => {
+  // clipboardData 对象是为通过编辑菜单、快捷菜单和快捷键执行的编辑操作所保留的，也就是你复制或者剪切内容
+  let clipboardData = event.clipboardData || window.clipboardData;
+  // 如果未复制或者未剪切，则return出去
+  if (!clipboardData) {
+    return;
+  }
+  // Selection 对象，表示用户选择的文本范围或光标的当前位置。
+  // 声明一个变量接收 -- 用户输入的剪切或者复制的文本转化为字符串
+  let text = window.getSelection().toString();
+  if (text) {
+    // 如果文本存在，首先取消文本的默认事件
+    event.preventDefault();
+    clipboardData.setData('text/plain', text + '\n\n此文章版权归' + + '所有，转载请标明');
+  }
+}
+```
 
-## webpack
+## 添加了文件上传功能
+```js
+const choosefile = () => {
+  var fileList = document.getElementById('files').files;
+  var nameStr = '';
+  for (let i = 0; i < fileList.length; i++) {
+    nameStr += `${i === 0 ? '' : ', '}${fileList[i].name}`;
+    var reader = new FileReader();
+    reader.readAsText(fileList[i], "UTF-8");
+    reader.onload = function (e) {
+      var upContent = e.target.result;
+      setContent(upContent)
+    }
+  }
+}
+```
+
 

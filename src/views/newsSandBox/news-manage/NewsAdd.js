@@ -4,6 +4,7 @@ import axios from 'axios'
 
 import style from './News.module.css'
 import NewsEditor from '../../../components/news-manage/NewsEditor';
+import FileUpload from '../../../components/news-manage/fileUpload/FileUpload';
 
 const { Step } = Steps;
 const { Option } = Select;
@@ -150,7 +151,9 @@ export default function NewsAdd(props) {
           current < 2 && <Button style={{ marginRight: "15px" }} onClick={next}>下一步</Button>
         }
         {
-          current === 1 && <input type="file" name="file" multiple="multiple" id="files" onChange={choosefile} />
+          current === 1 &&
+          // <input type="file" name="file" multiple="multiple" id="files" onChange={choosefile} />
+          <FileUpload></FileUpload>
         }
 
         {
