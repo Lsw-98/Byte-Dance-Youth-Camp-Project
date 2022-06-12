@@ -21,6 +21,7 @@ const resolvePost = (req) => {
 const extractExt = (filename) =>
   filename.slice(filename.lastIndexOf('.'), filename.length);
 
+// 
 const createUploadedList = async (fileHash) => {
   const fileDir = path.resolve(UPLOAD_DIR, fileHash);
   return fse.existsSync(fileDir) ? await fse.readdir(fileDir) : [];
@@ -37,27 +38,30 @@ const pipeStream = (chunkPath, writeStream) => {
   });
 };
 
+// 合并文件
 const mergeFileChunks = async (targetFilePath, fileHash, chunkSize) => {
-  const chunkDir = path.resolve(UPLOAD_DIR, fileHash);
-  const chunkNames = await fse.readdir(chunkDir);
-  //根据分片下表排序
-  chunkNames.sort((a, b) => a.split('_')[1] - b.split('_')[1]);
+  // 将fileHash解析为绝对路径
+  const chunkDir = path.resolve(UPLOAD_DIR, fileHash)
+  // 读取每个分片的路径名
+  const chunkNames = await fse.readdir(chunkDir)
+  // 根据分片路径排序
+  chunkNames.sort((a, b) => a.split('_')[1] - b.split('_')[1])
 
-  await fse.writeFileSync(targetFilePath, '');
+  // 同步写入内容，如果有内容会被覆盖
+  await fse.writeFileSync(targetFilePath, '')
 
   await Promise.all(
     chunkNames.map((chunkName, index) => {
-      const chunkPath = path.resolve(chunkDir, chunkName);
-      return pipeStream(
-        chunkPath,
+      const chunkPath = path.resolve(chunkDir, chunkName)
+      return pipeStream(chunkPath,
         fse.createWriteStream(targetFilePath, {
           start: index * chunkSize,
         })
-      );
+      )
     })
-  );
+  )
 
-  await fse.rmdir(chunkDir);
+  await fse.rmdir(chunkDir)
 };
 
 server.on('request', async (req, res) => {
@@ -68,6 +72,7 @@ server.on('request', async (req, res) => {
     return;
   }
 
+  // 判断哪些分片已上传成功
   if (req.url === '/verify') {
     const data = await resolvePost(req);
     const { fileHash, fileName } = data;
@@ -92,11 +97,13 @@ server.on('request', async (req, res) => {
     return;
   }
 
+  // 合并分片
   if (req.url === '/merge') {
     const data = await resolvePost(req);
     const { fileHash, fileName, chunkSize } = data;
     const ext = extractExt(fileName);
     const targetFilePath = path.resolve(UPLOAD_DIR, `${fileHash}${ext}`);
+    console.log(targetFilePath);
     await mergeFileChunks(targetFilePath, fileHash, chunkSize);
 
     res.end(

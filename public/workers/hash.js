@@ -1,6 +1,7 @@
 /* eslint-disable no-restricted-globals */
 self.importScripts('/spark-md5.min.js');
 
+// self代表子线程自身
 self.onmessage = (e) => {
 	const { fileChunks } = e.data;
 	const spark = new self.SparkMD5.ArrayBuffer();
@@ -9,7 +10,9 @@ self.onmessage = (e) => {
 		count = 0;
 
 	const loadNext = (index) => {
+		// 新建reader对象
 		const reader = new FileReader();
+		// 读取每个文件切片
 		reader.readAsArrayBuffer(fileChunks[index].fileChunk);
 		reader.onload = (e) => {
 			count++;
@@ -19,13 +22,14 @@ self.onmessage = (e) => {
 					percentage: 100,
 					hash: spark.end(),
 				});
+				// 上传文件，关闭worker
 				self.close();
 			} else {
+				// 计算文件百分比
 				percentage += 100 / fileChunks.length;
 				self.postMessage({
 					percentage,
 				});
-
 				loadNext(count);
 			}
 		};
