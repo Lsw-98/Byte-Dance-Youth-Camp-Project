@@ -1,23 +1,24 @@
-import React, { useState, useEffect } from 'react';
-import Home from '../../views/newsSandBox/home/Home';
-import Nopermission from '../../views/newsSandBox/noperomission/Nopermission';
-import RightList from '../../views/newsSandBox/right-manage/RightList';
-import RoleList from '../../views/newsSandBox/right-manage/RoleList';
-import UserList from '../../views/newsSandBox/user-manage/UserList';
-import NewsAdd from '../../views/newsSandBox/news-manage/NewsAdd';
-import NewsDraft from '../../views/newsSandBox/news-manage/NewsDraft';
-import NewsPreview from '../../views/newsSandBox/news-manage/NewsPreview';
-import NewsUpdate from '../../views/newsSandBox/news-manage/NewsUpdate';
-import NewsCategory from '../../views/newsSandBox/news-manage/NewsCategory';
-import Audit from '../../views/newsSandBox/audit-manage/Audit';
-import AuditList from '../../views/newsSandBox/audit-manage/AuditList';
-import Unpublished from '../../views/newsSandBox/publish-manage/Unpublished';
-import Published from '../../views/newsSandBox/publish-manage/Published';
-import Sunset from '../../views/newsSandBox/publish-manage/Sunset';
+import React, { useState, useEffect, lazy } from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
 import axios from 'axios';
 import { Spin } from 'antd';
 import { connect } from 'react-redux';
+
+const Home = lazy(() => import('../../views/newsSandBox/home/Home'));
+const Nopermission = lazy(() => import('../../views/newsSandBox/noperomission/Nopermission'));
+const RightList = lazy(() => import('../../views/newsSandBox/right-manage/RightList'));
+const RoleList = lazy(() => import('../../views/newsSandBox/right-manage/RoleList'));
+const UserList = lazy(() => import('../../views/newsSandBox/user-manage/UserList'));
+const NewsAdd = lazy(() => import('../../views/newsSandBox/news-manage/NewsAdd'));
+const NewsDraft = lazy(() => import('../../views/newsSandBox/news-manage/NewsDraft'));
+const NewsPreview = lazy(() => import('../../views/newsSandBox/news-manage/NewsPreview'));
+const NewsUpdate = lazy(() => import('../../views/newsSandBox/news-manage/NewsUpdate'));
+const NewsCategory = lazy(() => import('../../views/newsSandBox/news-manage/NewsCategory'));
+const Audit = lazy(() => import('../../views/newsSandBox/audit-manage/Audit'));
+const AuditList = lazy(() => import('../../views/newsSandBox/audit-manage/AuditList'));
+const Unpublished = lazy(() => import('../../views/newsSandBox/publish-manage/Unpublished'));
+const Published = lazy(() => import('../../views/newsSandBox/publish-manage/Published'));
+const Sunset = lazy(() => import('../../views/newsSandBox/publish-manage/Sunset'));
 
 const LocalRouterMap = {
   "/home": Home,
