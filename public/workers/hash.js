@@ -16,10 +16,12 @@ self.onmessage = (e) => {
 		reader.readAsArrayBuffer(fileChunks[index].fileChunk);
 		reader.onload = (e) => {
 			count++;
+			// 将得到的buffer数据写入到spark中
 			spark.append(e.target.result);
 			if (count === fileChunks.length) {
 				self.postMessage({
 					percentage: 100,
+					// end代表已经处理完成，并读取这个hash值
 					hash: spark.end(),
 				});
 				// 上传文件，关闭worker

@@ -21,7 +21,6 @@ const resolvePost = (req) => {
 const extractExt = (filename) =>
   filename.slice(filename.lastIndexOf('.'), filename.length);
 
-// 
 const createUploadedList = async (fileHash) => {
   const fileDir = path.resolve(UPLOAD_DIR, fileHash);
   return fse.existsSync(fileDir) ? await fse.readdir(fileDir) : [];
@@ -64,7 +63,12 @@ const mergeFileChunks = async (targetFilePath, fileHash, chunkSize) => {
   await fse.rmdir(chunkDir)
 };
 
+/**
+ * req：客户端传给服务器的数据
+ * res：服务器可调用的方法，将前端传来的数据进行转化后再发送给前端
+ */
 server.on('request', async (req, res) => {
+  // CORS设置跨域
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Headers', '*');
   if (req.method === 'OPTIONS') {
@@ -103,7 +107,7 @@ server.on('request', async (req, res) => {
     const { fileHash, fileName, chunkSize } = data;
     const ext = extractExt(fileName);
     const targetFilePath = path.resolve(UPLOAD_DIR, `${fileHash}${ext}`);
-    console.log(targetFilePath);
+
     await mergeFileChunks(targetFilePath, fileHash, chunkSize);
 
     res.end(
@@ -115,9 +119,16 @@ server.on('request', async (req, res) => {
     return;
   }
 
+  // 将客户端传来的formdata格式的数据进行解析
   const multipart = new multiparty.Form();
 
+  /**
+   * 解析客户端传来的数据
+   * fields：包含着文件的各种信息
+   * files：文件对象
+   */
   multipart.parse(req, async (err, fields, files) => {
+    // 解析失败
     if (err) {
       return;
     }

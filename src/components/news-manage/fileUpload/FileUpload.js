@@ -185,8 +185,10 @@ function FileUpload() {
     if (chunks.length < 1) return;
 
     let reqList = chunks
+      // 这里遍历chunks数组，chunks数组中包括所有的分片信息，将uploadedChunks（已上传完成的分片）过滤掉，剩下的就是未上传完成的分片
       .filter(({ hash }) => !uploadedChunks.includes(hash))
       .map(({ chunk, hash, fileHash }) => {
+        // 利用formDate完成文件上传
         let formData = new FormData();
         formData.append('chunk', chunk);
         formData.append('hash', hash);
@@ -203,8 +205,9 @@ function FileUpload() {
         })
       })
 
-    // 发送切片
+    // 并发上传切片
     await Promise.all(reqList);
+
     if (reqList.length + uploadedChunks.length === chunks.length) {
       // 发送合并请求
       toast.loading('合并文件分片...', { id: toastId.current });
@@ -265,6 +268,7 @@ function FileUpload() {
   const handlePauseUpload = () => {
     setUploadState(UPLOAD_STATES.PAUSED);
     toast('暂停上传', { id: toastId.current });
+
     // 如果还有请求，就中止请求
     pendingRequest.current.forEach((xhr) => xhr?.abort());
     pendingRequest.current = [];
@@ -275,10 +279,16 @@ function FileUpload() {
     try {
       setUploadState(UPLOAD_STATES.UPLOADING);
       toast.loading('分片上传中...', { id: toastId.current });
+
       const { uploadedChunks } = await shouldUpload(
+        // 文件的哈希引用
         fileHashRef.current,
+        // 文件名称
         file.name
       );
+
+      // chunks：包括文件的哈希，切片的哈希，切片上传进度
+      // uploadedChunks：已上传完成的切片
       uploadChunks(chunks, uploadedChunks);
     } catch (err) {
       toast.error(`${err}`, { id: toastId.current });
@@ -310,6 +320,7 @@ function FileUpload() {
     });
   };
 
+  // 格式化单位
   const formatBytes = (bytes, decimals = 2) => {
     if (bytes === 0) return '0 Bytes';
 
@@ -322,6 +333,7 @@ function FileUpload() {
     return (bytes / Math.pow(k, i)).toFixed(dm) + ' ' + sizes[i];
   };
 
+  // 文件上传状态
   const showStatus = (percent) => {
     if (percent === 0) {
       if (uploadState === UPLOAD_STATES.FAILED)
@@ -353,6 +365,7 @@ function FileUpload() {
         return;
     }
   };
+
 
   const renderChunks = () => {
     return chunks.map((chunk) => (
