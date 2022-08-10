@@ -29,7 +29,6 @@ export default function NewsEditor(props) {
         editorClassName="editorClassName"
         onEditorStateChange={(editorState) => setEditorState(editorState)}
         onBlur={() => {
-          console.log(editorState.getCurrentContent());
           props.getContent(draftToHtml(convertToRaw(editorState.getCurrentContent())))
         }}
       />

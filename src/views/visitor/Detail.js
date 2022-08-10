@@ -36,7 +36,6 @@ export default function Detail(props) {
   }
 
   const handleCopy = (event) => {
-    console.log(1);
     // clipboardData 对象是为通过编辑菜单、快捷菜单和快捷键执行的编辑操作所保留的，也就是你复制或者剪切内容
     let clipboardData = event.clipboardData || window.clipboardData;
     // 如果未复制或者未剪切，则return出去

@@ -1,11 +1,13 @@
-import React, { } from 'react';
-import { Form, Input, Button, message } from 'antd';
+import React, { useState } from 'react';
+import { Form, Input, Button, message, Drawer } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import './Login.css'
 import axios from 'axios';
 import Particles from 'react-tsparticles';
 
 export default function Login(props) {
+  const [visible, setVisible] = useState(false);
+
   const onFinish = (values) => {
     axios.get(`/users?username=${values.username}&password=${values.password}&roleState=true&_expand=role`).then(res => {
       if (res.data.length === 0) {
@@ -15,6 +17,14 @@ export default function Login(props) {
         props.history.push("/")
       }
     })
+  };
+
+  const qrHandle = () => {
+    setVisible(true);
+  }
+
+  const onClose = () => {
+    setVisible(false);
   };
 
   return (
@@ -203,9 +213,15 @@ export default function Login(props) {
             <Button type="primary" htmlType="submit" className="login-form-button">
               登录
             </Button>
+            <Button type="primary" className="login-form-qr" style={{ marginLeft: "5px" }} onClick={qrHandle}>
+              二维码登录
+            </Button>
           </Form.Item>
         </Form>
+        <Drawer title="请使用微信扫码登录" placement="right" onClose={onClose} visible={visible}>
+
+        </Drawer>
       </div>
-    </ div>
+    </ div >
   );
 }
