@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Form, Input, Button, message, Drawer } from 'antd';
+import { Form, Input, Button, message, Image } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import './Login.css'
 import axios from 'axios';
@@ -23,7 +23,7 @@ export default function Login(props) {
     setVisible(true);
   }
 
-  const onClose = () => {
+  const usernameHandle = () => {
     setVisible(false);
   };
 
@@ -186,41 +186,56 @@ export default function Login(props) {
       } />
       <div className='formContainer'>
         <div className="title">全球新闻发布管理系统</div>
-        <Form
-          name="normal_login"
-          className="login-form"
-          onFinish={onFinish}
-        >
-          <Form.Item
-            name="username"
-            rules={[{ required: true, message: 'Please input your Username!' }]}
-          >
-            <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="Username" />
-          </Form.Item>
-          <Form.Item
-            name="password"
-            rules={[{ required: true, message: 'Please input your Password!' }]}
-          >
-            <Input
-              prefix={<LockOutlined className="site-form-item-icon" />}
-              type="password"
-              placeholder="Password"
-              autoComplete='off'
-            />
-          </Form.Item>
+        {
+          !visible && (
+            <Form
+              name="normal_login"
+              className="login-form"
+              onFinish={onFinish}
+            >
+              <Form.Item
+                name="username"
+                rules={[{ required: true, message: 'Please input your Username!' }]}
+              >
+                <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="Username" />
+              </Form.Item>
+              <Form.Item
+                name="password"
+                rules={[{ required: true, message: 'Please input your Password!' }]}
+              >
+                <Input
+                  prefix={<LockOutlined className="site-form-item-icon" />}
+                  type="password"
+                  placeholder="Password"
+                  autoComplete='off'
+                />
+              </Form.Item>
 
-          <Form.Item>
-            <Button type="primary" htmlType="submit" className="login-form-button">
-              登录
-            </Button>
-            <Button type="primary" className="login-form-qr" style={{ marginLeft: "5px" }} onClick={qrHandle}>
-              二维码登录
-            </Button>
-          </Form.Item>
-        </Form>
-        <Drawer title="请使用微信扫码登录" placement="right" onClose={onClose} visible={visible}>
+              <Form.Item>
+                <Button type="primary" htmlType="submit" className="login-form-button">
+                  登录
+                </Button>
+                <Button type="primary" className="login-form-qr" style={{ marginLeft: "5px" }} onClick={qrHandle}>
+                  二维码登录
+                </Button>
+              </Form.Item>
+            </Form>
+          )
+        }
+        {
+          visible && (
+            <div className='qr-container'>
+              <Image
+                width={150}
+                src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
 
-        </Drawer>
+              />
+              < Button className="qr-to-username" onClick={usernameHandle}>
+                账号密码登录
+              </Button>
+            </div>
+          )
+        }
       </div>
     </ div >
   );

@@ -1,4 +1,4 @@
-.formContainer{
+.formContainer {
   position: fixed;
   background-color: rgba(0, 0, 0, 0.7);
   width: 500px;
@@ -10,10 +10,21 @@
   z-index: 100;
 }
 
-.title{
+.title {
   text-align: center;
   height: 80pxx;
   line-height: 80px;
   font-size: 30px;
   color: white;
+}
+
+.qr-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.qr-to-username {
+  margin-top: 5px;
+  /* align-self: start; */
 }
