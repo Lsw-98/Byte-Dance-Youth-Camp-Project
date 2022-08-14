@@ -1,22 +1,29 @@
 import React, { useState } from 'react';
 import { Form, Input, Button, message, Image } from 'antd';
-import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import './Login.css'
 import axios from 'axios';
 import Particles from 'react-tsparticles';
+import { getQrCode } from '../../api/login';
+import Verify from '../../components/login/Verify';
 
 export default function Login(props) {
   const [visible, setVisible] = useState(false);
 
+  const childRef = React.useRef();
+
   const onFinish = (values) => {
-    axios.get(`/users?username=${values.username}&password=${values.password}&roleState=true&_expand=role`).then(res => {
-      if (res.data.length === 0) {
-        message.error("用户名或密码错误")
-      } else {
-        localStorage.setItem("token", JSON.stringify(res.data[0]))
-        props.history.push("/")
-      }
-    })
+    if (values.verify && childRef.current.validate(values.verify)) {
+      axios.get(`/users?username=${values.username}&password=${values.password}&roleState=true&_expand=role`).then(res => {
+        if (res.data.length === 0) {
+          message.error("用户名或密码错误")
+        } else {
+          localStorage.setItem("token", JSON.stringify(res.data[0]))
+          props.history.push("/")
+        }
+      })
+    } else {
+      message.error('验证码错误', 2);
+    }
   };
 
   const qrHandle = () => {
@@ -26,6 +33,16 @@ export default function Login(props) {
   const usernameHandle = () => {
     setVisible(false);
   };
+
+  // 获取二维码
+  const getQr = () => {
+    getQrCode.then((res) => {
+      console.log(res);
+      if (res.code === 0) {
+
+      }
+    })
+  }
 
   return (
     <div style={{ background: "rgb(35, 39, 65)", height: "100%", overflow: "hidden" }} >
@@ -188,52 +205,66 @@ export default function Login(props) {
         <div className="title">全球新闻发布管理系统</div>
         {
           !visible && (
-            <Form
-              name="normal_login"
-              className="login-form"
-              onFinish={onFinish}
-            >
-              <Form.Item
-                name="username"
-                rules={[{ required: true, message: 'Please input your Username!' }]}
+            <>
+              <Form
+                name="normal_login"
+                className="login-form"
+                onFinish={onFinish}
               >
-                <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="Username" />
-              </Form.Item>
-              <Form.Item
-                name="password"
-                rules={[{ required: true, message: 'Please input your Password!' }]}
-              >
-                <Input
-                  prefix={<LockOutlined className="site-form-item-icon" />}
-                  type="password"
-                  placeholder="Password"
-                  autoComplete='off'
-                />
-              </Form.Item>
-
-              <Form.Item>
-                <Button type="primary" htmlType="submit" className="login-form-button">
-                  登录
-                </Button>
-                <Button type="primary" className="login-form-qr" style={{ marginLeft: "5px" }} onClick={qrHandle}>
-                  二维码登录
-                </Button>
-              </Form.Item>
-            </Form>
+                <Form.Item
+                  label="用户名："
+                  name="username"
+                  rules={[{ required: true, message: '请输入用户名！' }]}
+                >
+                  <Input placeholder="请输入用户名" />
+                </Form.Item>
+                <Form.Item
+                  label="密码："
+                  name="password"
+                  rules={[{ required: true, message: '请输入密码！' }]}
+                >
+                  <Input
+                    type="password"
+                    placeholder="请输入密码"
+                    autoComplete='off'
+                  />
+                </Form.Item>
+                <Form.Item
+                  label="验证码："
+                  name="verify"
+                  rules={[{ required: true, message: '请输入验证码！' }]}
+                >
+                  <Input
+                    placeholder="请输入验证码"
+                    autoComplete='off'
+                  />
+                </Form.Item>
+                <Form.Item>
+                  <Button type="primary" htmlType="submit" className="login-form-button">
+                    登录
+                  </Button>
+                  <Button type="primary" className="login-form-qr" style={{ marginLeft: "5px" }} onClick={qrHandle}>
+                    二维码登录
+                  </Button>
+                  <Verify cRef={childRef}></Verify>
+                </Form.Item>
+              </Form>
+            </>
           )
         }
         {
           visible && (
-            <div className='qr-container'>
-              <Image
-                width={150}
-                src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
-
-              />
-              < Button className="qr-to-username" onClick={usernameHandle}>
-                账号密码登录
-              </Button>
-            </div>
+            <>
+              <div className='qr-container'>
+                <Image
+                  width={150}
+                  src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+                />
+                < Button className="qr-to-username" onClick={usernameHandle}>
+                  账号密码登录
+                </Button>
+              </div>
+            </>
           )
         }
       </div>

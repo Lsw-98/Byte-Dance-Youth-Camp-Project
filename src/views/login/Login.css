@@ -1,6 +1,6 @@
 .formContainer {
   position: fixed;
-  background-color: rgba(0, 0, 0, 0.7);
+  background-color: #ddd;
   width: 500px;
   height: 300px;
   top: 50%;
@@ -12,10 +12,10 @@
 
 .title {
   text-align: center;
-  height: 80pxx;
+  height: 80px;
   line-height: 80px;
   font-size: 30px;
-  color: white;
+  color: #000;
 }
 
 .qr-container {
@@ -27,4 +27,9 @@
 .qr-to-username {
   margin-top: 5px;
   /* align-self: start; */
+}
+
+
+.ant-form-item-label>label {
+  color: #000;
 }
