@@ -1,8 +1,8 @@
 .formContainer {
   position: fixed;
   background-color: #ddd;
-  width: 500px;
-  height: 300px;
+  width: 600px;
+  height: 400px;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);

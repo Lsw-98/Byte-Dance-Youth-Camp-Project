@@ -206,7 +206,7 @@ function FileUpload() {
       })
 
     // 并发上传切片
-    await Promise.all(reqList);
+    await Promise.allSettled(reqList);
 
     if (reqList.length + uploadedChunks.length === chunks.length) {
       // 发送合并请求

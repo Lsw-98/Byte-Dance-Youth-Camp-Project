@@ -8,6 +8,7 @@ import Verify from '../../components/login/Verify';
 
 export default function Login(props) {
   const [visible, setVisible] = useState(false);
+  const [phone, setPhone] = useState(false);
 
   const childRef = React.useRef();
 
@@ -28,20 +29,25 @@ export default function Login(props) {
 
   const qrHandle = () => {
     setVisible(true);
+    setPhone(false);
   }
 
   const usernameHandle = () => {
     setVisible(false);
+    setPhone(false);
   };
 
   // 获取二维码
   const getQr = () => {
     getQrCode.then((res) => {
-      console.log(res);
       if (res.code === 0) {
 
       }
     })
+  }
+
+  const phoneHandle = () => {
+
   }
 
   return (
@@ -240,10 +246,13 @@ export default function Login(props) {
                   />
                 </Form.Item>
                 <Form.Item>
-                  <Button type="primary" htmlType="submit" className="login-form-button">
+                  <Button htmlType="submit" className="login-form-button">
                     登录
                   </Button>
-                  <Button type="primary" className="login-form-qr" style={{ marginLeft: "5px" }} onClick={qrHandle}>
+                  <Button className="login-form-qr" style={{ marginLeft: "5px" }} onClick={phoneHandle}>
+                    手机号登录
+                  </Button>
+                  <Button className="login-form-qr" style={{ marginLeft: "5px" }} onClick={qrHandle}>
                     二维码登录
                   </Button>
                   <Verify cRef={childRef}></Verify>
@@ -260,9 +269,14 @@ export default function Login(props) {
                   width={150}
                   src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
                 />
-                < Button className="qr-to-username" onClick={usernameHandle}>
-                  账号密码登录
-                </Button>
+                <Form.Item>
+                  < Button className="qr-to-username" onClick={usernameHandle}>
+                    账号密码登录
+                  </Button>
+                  < Button className="phone-to-username" style={{ marginLeft: "5px" }} onClick={usernameHandle}>
+                    手机号登录
+                  </Button>
+                </Form.Item>
               </div>
             </>
           )

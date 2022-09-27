@@ -14,3 +14,4 @@ export function login() {
 export function autoLogin() {
   return qrRequest.get("")
 }
+

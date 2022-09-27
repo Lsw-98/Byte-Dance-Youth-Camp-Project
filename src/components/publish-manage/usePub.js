@@ -2,9 +2,15 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { notification } from 'antd';
 
+// 传入一个type，代表当前文章的状态
 function UsePub(type) {
+  // 获取当前的所有文章
   const [dataSource, setDataSource] = useState([])
+  // 从localStorage中读取用户信息，使用对象结构的方式拿到username
   const { username } = JSON.parse(localStorage.getItem("token"))
+
+  // 定义一个useEffect，在里面发起请求，请求当前用户的所有文章列表
+  // 只有在username或者是hooks传入的type发生变化时才会重新发起请求
   useEffect(() => {
     axios(`/news?author=${username}&publishState=${type}&_expand=category`).then(res => {
       setDataSource(res.data);
